@@ -49,19 +49,24 @@
 
   table {
     border-collapse: collapse;
-    width: 50%;
+    width: auto;
+    margin-right: auto;
+    margin-left: auto;
+
   }
   
   th {
     border: 1px solid #999;
     padding: 0.5rem;
     text-align: center;
+    font-size: small;
   }
 
   td {
     border: 1px solid #999;
     padding: 0.5rem;
     text-align: right;
+    font-size: small;
   }
 
   .my-custom-scrollbar {
@@ -72,4 +77,14 @@
 
   .table-wrapper-scroll-y {
   display: block;
+  }
+
+  button {
+    position: center;
+    padding: 2px;
+    margin-top: 10px;
+  }
+
+  .main-menu {
+    text-align: center;
   }
