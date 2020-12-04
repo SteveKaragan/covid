@@ -17,11 +17,23 @@ const urlGDP = `https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.C
 
 //Promises/Fetch
 //set a variable equal to this and console log it with Rick, what is this?  How do you grab [[]]
-//error handling?
+//error handling? or do I need something like:
+// .then(response => {
+//   if (response.ok) {
+//     return response.json();
+//   }
+//   throw new Error(response.statusText);
+// })
+// .then(responseJson => displayResults(responseJson))
+// .catch(err => {
+//   $('#js-error-message').text(`Something went wrong: ${err.message}`);
+// });
 function begin() {
   Promise.all([fetch(urlCOVID).then(response => response.json()), fetch(urlPop).then(response => response.json()),fetch(urlSixtyFive).then(response => response.json()),
     fetch(urlGDP).then(response => response.json())])
-    .then((values) => grabData(values));//what is values?
+    .then((values) => grabData(values)).catch((error) => {
+      console.log(error)
+   });//what is values?
   };
 
 //Attempt to get data into global scope
