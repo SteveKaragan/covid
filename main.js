@@ -2,9 +2,12 @@
 'use strict';
 //BIG QUESTIONS:
 //1. Do I need to collect, merge, and transform my data in another way?
-//2. Error Handling
-//3. Table formatting, data formatting, display, mobile--yikes!
-//4. connected to 3 would Datatables in jQuery or some other display be better?
+//2. Error Handling ok?
+//3. Table formatting, data formatting, display, mobile--yikes, dataTables in jQuery?!
+        //Where should I format my data?
+        //How should I store it and where?
+//4. How best to make containers 
+//5. Want to create sample metrics but can't
 
 //URL's for Data API's
 const urlCOVID = `https://api.covid19api.com/summary`
@@ -12,32 +15,21 @@ const urlPop = `https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?f
 const urlSixtyFive = `https://api.worldbank.org/v2/country/all/indicator/SP.POP.65UP.TO.ZS?format=json&per_page=5000&date=2019`
 const urlGDP = `https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.CD?format=json&per_page=5000&date=2019`
 
-//what is asynchronicity, how does it manifest in this code?
+
 //So I call new data everytimg the page reloads?  When could data values change?
 
 //Promises/Fetch
-//set a variable equal to this and console log it with Rick, what is this?  How do you grab [[]]
-//error handling? or do I need something like:
-// .then(response => {
-//   if (response.ok) {
-//     return response.json();
-//   }
-//   throw new Error(response.statusText);
-// })
-// .then(responseJson => displayResults(responseJson))
-// .catch(err => {
-//   $('#js-error-message').text(`Something went wrong: ${err.message}`);
-// });
+//set a variable equal to Promises and console log it with Rick, what is this?  How do you grab [[]]
+
 function begin() {
   Promise.all([fetch(urlCOVID).then(response => response.json()), fetch(urlPop).then(response => response.json()),fetch(urlSixtyFive).then(response => response.json()),
-    fetch(urlGDP).then(response => response.json())])
-    .then((values) => grabData(values)).catch((error) => {
-      console.log(error)
+    fetch(urlGDP).then(response => response.json())]).then((values) => grabData(values)).catch((error) => {
+      $('#js-error-message').text(`Something went wrong: ${error.message}`)
    });//what is values?
   };
 
 //Attempt to get data into global scope
-let data = [];
+let data= []
 
 //in this function, I try to create a common store, "data"--an array of objects.  Each object is a country.
 //I use this funtion to bring data together in one array.
@@ -67,11 +59,11 @@ function grabData(values) {
   data.forEach(country => {
     for (let key in country) {
       if (typeof(country[key])==='number') {
-        Number.parseFloat(country[key]).toFixed(2)
       };
     };
   });
     dataTransform(data)
+    return data
 }; 
 
 //I added ranking data for each of the world bank data.  I thought it would make sorting/selecting data easier.
@@ -142,7 +134,8 @@ function handleCountrySelector() {
 }
 
 function generateCountrySelector() {
-  //This sort does not make them appear in alpha order?
+  //This sort does not make them appear in alpha order? Nick C. on thinkchat thinks this is an async issue
+  //Nick: you could create another variable that will hold the sorted values of `data` in the `then` block of the promise.all()
   const options = data.sort(function(a, b){
     return a.Country-b.Country
   }).map(country => {
@@ -156,7 +149,8 @@ function generateCountrySelector() {
   <select name="country" id="select" form="country">
       ${options.join(" ")}
   </select>
-</form>`
+</form>
+<button type="button" id="js-main">Main Menu</button>`
 }
 
 function renderCountrySelector() {
@@ -180,19 +174,19 @@ function generateCountryData() {
   console.log(country)
   return `
   <div id=>
-    <p> ${country.Country} is ranked number ${country.confirmedRank} in the world for total COVID infection. ${country.Country} has had ${country.TotalConfirmed} infections.  However, ${country.Country} is ranked
-    ${country.perMillRank} in infections per million with an infection rate of ${country.casesPerMill} per million.  ${country.Country} has a population of ${country.population}, and is 
-    ranked ${country.populationRank} in the world by population.  ${country.Country} has had ${country.TotalDeaths} deaths due to COVID. ${country.Country} has a population over 65 of ${country.popOver65} million,
-    and a GDP per capita of ${country.gdp}.  World wide GDP per capita is $11,428 for 2019 in current USD.
+    <p> ${country.Country} is ranked number ${country.confirmedRank} in the world for total COVID infection. ${country.Country} has had ${Number(country.TotalConfirmed).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} infections.  However, ${country.Country} is ranked
+    ${country.perMillRank} in infections per million with an infection rate of ${Number(country.casesPerMill).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} per million.  ${country.Country} has a population of ${Number(country.population).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})}, and is 
+    ranked ${country.populationRank} in the world by population.  ${country.Country} has had ${Number(country.TotalDeaths).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} deaths due to COVID. ${country.Country} has a population over 65 of ${Number(country.popOver65).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} million,
+    and a GDP per capita of ${Number(country.gdp).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})}.  World wide GDP per capita is $11,428 for 2019 in current USD.
     </p>
   </div>`
 }
 
-["Country", "CountryCode", "Slug", "NewConfirmed", "TotalConfirmed", "NewDeaths", "TotalDeaths", "NewRecovered", "TotalRecovered", "Date", "Premium",	"population",	"popOver65", "gdp",	"casesPerMill",	"confirmedRank", "perMillRank",	"populationRank"];
+//Number(country.casesPerMill).toLocaleString(undefined,{ minimumFractionDigits: 0 })
 
 function renderCountryData() {
   const countryData = generateCountryData();
-  $('.js-listen-here').html(countryData)
+  $('.js-listen-here-2').html(countryData)
 }
 
 
@@ -233,7 +227,7 @@ function handleTenData() {
     renderTenData()
   })
 }
-
+//Would this be easier to do as an ordered list?
 function generateTenData() {
   return `<div class="table-wrapper-scroll-y my-custom-scrollbar hidden">
     <button type="button" id="js-main">Main Menu</button>      
@@ -269,11 +263,16 @@ function generateTableHead(header) {
 
 function generateTable(data, array, renNum=data.length) {
   let table = document.querySelector('table');
+  let text  
   for (let i = 0; i < renNum; i++) {
     let row = table.insertRow();
     for (let j = 0; j < array.length; j++){
       let cell = row.insertCell();
-      let text = document.createTextNode(data[i][array[j]]);
+        text = document.createTextNode(array[j] !=="Country" ?
+          Number(data[i][array[j]]).toLocaleString(
+          undefined,
+          { minimumFractionDigits: 0, maximumFractionDigits: 1})
+          : data[i][array[j]]);
       cell.appendChild(text);
     }
   }
@@ -282,9 +281,15 @@ function generateTable(data, array, renNum=data.length) {
 let allFields = ["Country", "CountryCode", "Slug", "NewConfirmed", "TotalConfirmed", "NewDeaths", "TotalDeaths", "NewRecovered", "TotalRecovered", "Date", "Premium",	"population",	"popOver65", "gdp",	"casesPerMill",	"confirmedRank", "perMillRank",	"populationRank"];
 let displayTotFields = ["Country", "TotalConfirmed", "confirmedRank", "casesPerMill",	"perMillRank", "population", "populationRank", "popOver65", "gdp"];
 let headersTotFields = ["Country", "Infections", "Infections Rank", "Infections per million",	"per million Rank", "Population", "Population Rank", "Population over 65", "GDP per Capita"];
-let displayInfections = ["confirmedRank", "Country", "TotalConfirmed"]
-let headersInfections = ["Infections Rank", "Country", "Infections"]
-console.log(data)
+let displayInfections = ["Country", "confirmedRank", "TotalConfirmed"]
+let headersInfections = ["Country", "Infections Rank", "Infections"]
+
+
+
+// const infectMean = data.filter(obj => typeof(obj.TotalConfirmed) === 'number').reduce((acc, cv) => {
+//   return acc + cv.TotalConfirmed
+// }, 0)
+
 
   function render() {
     begin()
@@ -294,7 +299,7 @@ console.log(data)
     handleBackMainMenu()
     handleTenData()
     handleCountrySelector()
-    handleCountryData()  
+    handleCountryData() 
   }
   
   $(render);

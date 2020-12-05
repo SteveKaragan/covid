@@ -65,9 +65,19 @@
   td {
     border: 1px solid #999;
     padding: 0.5rem;
-    text-align: right;
     font-size: small;
+    text-align: right;
   }
+
+  /* .baseball td:nth-child(1){
+    text-align: left;}
+    
+  .baseball .baseball td:nth-child(3){
+    text-align: right;} */
+
+  tbody>tr>:nth-child(1){
+      text-align:left;
+     }
 
   .my-custom-scrollbar {
     position: relative;
