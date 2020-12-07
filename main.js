@@ -13,12 +13,10 @@ function begin() {
    });
   };
 
-
-//command F data replace data. with store.data
 const store = {
   data: [],
   summary: {},
-}
+};
 
 function grabData(values) {
   console.log(values)
@@ -57,7 +55,7 @@ function dataTransform(data) {
   });
   for (let i = 0; i < data.length; i++) {
     data[i].confirmedRank = i + 1
-  }
+  };
   data.sort(function(a, b){
     return b.casesPerMill-a.casesPerMill
   });
@@ -76,10 +74,10 @@ function dataTransform(data) {
 
 //so I am rendering landing page here, because otherwise the summary data does not appear.
 function dataSummarize(data) {
-  store.summary.infections = Number(data.reduce((ac, cv) => ac + cv.TotalConfirmed, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
-  store.summary.deaths = Number(data.reduce((ac, cv) => ac + cv.TotalDeaths, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
-  store.summary.recovered = Number(data.reduce((ac, cv) => ac + cv.TotalRecovered, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
-  store.summary.population = Number(data.reduce((ac, cv) => ac + cv.population, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.infections = Number(data.reduce((ac, cv) => ac + cv.TotalConfirmed, 0)/1000000).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.deaths = Number(data.reduce((ac, cv) => ac + cv.TotalDeaths, 0)/1000000).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.recovered = Number(data.reduce((ac, cv) => ac + cv.TotalRecovered, 0)/1000000).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.population = Number(data.reduce((ac, cv) => ac + cv.population, 0)/1000000).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
   store.summary.popOver65 = Number(data.reduce((ac, cv) => ac + cv.popOver65, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
   store.summary.infectPerMill = Number(store.summary.infections /(store.summary.population / 1000000)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
   store.summary.infectRate = Number(store.summary.infections / store.summary.population).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
@@ -88,19 +86,26 @@ function dataSummarize(data) {
 
 //These two functions make the landing/info page for the app
 function generateLandingPage() {
-  return `<div class="container">
-  <button type="button" id="js-main">Main Menu</button>
-  <p>This site has been created to help average people get a better, more quantitative understanding of coronavirus cases world-wide,
-        by country by bringing together coronavirus data from covid19 API and other country level data from the World Bank. The hope
-        is that by making data more available, displaying it by country, and using some simple calculations that we can come to a
-        better, data-driven understanding of the scope of the pandemic in different countries and contemplate possible causes of 
-        differences.
+  return `
+  <h2>Site Information</h2>
+  <img src="/images/covid.jpeg" alt="COVID Virus">
+  <div class="container">
+  <p>This site has been created to help the average person get a better, more quantitative perspective of coronavirus cases world-wide
+        by country. Coronavirus data from <a href="https://covid19api.com/">Covid19 API</a>, sourced from Johns Hopkins, 
+        and other country level data from <a href="https://data.worldbank.org/">The World Bank</a> have been utilized.</p> 
+        
+        <p>The hope is that by making data readily available, displaying it by country, and using some simple calculations, that we can come to a better, data-driven understanding of the scope of the pandemic in different countries and contemplate possible causes of 
+        difference.  We will simply try to show by incorporating country level population data, the dramatic difference by country between total number of cases
+        and cases per million of population.
     </p>
 
-    <p>Based on the data from the sources above there have been ${store.summary.infections} coronavirus cases world-wide. ${store.summary.deaths}
-    people have died, and ${store.summary.recovered} people have recovered.</p>
+    <p>Based on the data from the sources above there have been ${store.summary.infections} million coronavirus cases world-wide. ${store.summary.deaths}
+    million people have died, and ${store.summary.recovered} million people have recovered.</p>
+    <div class="button">
+    <button type="button" id="js-main">Main Menu</button>
+    </div>
 </div>
-</div>`
+<footer></footer>`
 };
 
 function renderLandingPage() {
@@ -116,10 +121,17 @@ function handleMainMenu() {
 };
 
 function generateMainMenu() {
-  return `<div class='js-main-menu main-menu'>
-  <button type="button" id="js-country">One Country</button><br>
-  <button type="button" id="js-ten">Top 10</button><br>
-  <button type="button" id="js-all-data">All Data</button>`
+  return `
+  <h2>Main Menu</h2>
+  <div class='js-main-menu main-menu container'>
+  <button type="button" id="js-ten">Top 10 Data</button>
+  <p>Top 10 Data shows the 10 countries with the highest number of COVID cases, their world rank based on population, and world rank in cases per million</p>
+  <button type="button" id="js-country">Country Analysis</button>
+  <p>Country Analysis allows you to select any country and get a summary of its related data</p>
+  <button type="button" id="js-all-data">All Data</button>
+  <p>All Data displays all the data for each country in a table format</p>
+  </div>
+  <footer></footer>`
   
 };
 
@@ -127,6 +139,39 @@ function renderMainMenu() {
   const mainMenu = generateMainMenu();
   $('.js-listen-here').html(mainMenu);
   $('.js-listen-here-2').empty()
+};
+
+//These functions create the "10 high/10 low" from the button on the main menu, the button takes
+//you back to the main menu, How much do I want to do here?
+function handleTenData() {
+  $('.js-listen-here').on('click', '#js-ten', function(){
+    renderTopTenData()
+  });
+};
+//Would this be easier to do as an ordered list?
+function generateTopTenData() {
+  return `
+  <h2>Top 10 Data</h2>
+  <div class="table-wrapper-scroll-y my-custom-scrollbar hidden">
+         
+    <table>
+            <!-- here goes our data! -->
+        </table>
+      <div class="button">
+        <button type="button" id="js-main" class="main-button">Main Menu</button> 
+      </div>
+    </div>
+    <footer></footer>`
+};
+
+function renderTopTenData() {
+  const tenData = generateTopTenData();
+  $('.js-listen-here').html(tenData)
+  store.data.sort(function(a, b){
+    return a.confirmedRank-b.confirmedRank
+  });
+  generateTable(store.data, displayCases, 10);
+  generateTableHead(headersCases);
 };
 
 //These functions are to show one country selector
@@ -148,19 +193,24 @@ function generateCountrySelector() {
         return 1;
     }
     return 0;
-}).map(country => {
+    }).map(country => {
     return `
     <option value="${country.CountryCode}">${country.Country}</option>
     `
   });
   return `
-  <form action="" id="country">
+  <h2>Country Analysis</h2>
+  <form action="" id="country" class="form">
   <label for="country">Select A Country</label>
   <select name="country" id="select" form="country">
       ${options.join(" ")}
-  </select>
+  </select><br>
+  <div class="button">
+  <button type="button" id="js-main">Main Menu</button>
+  </div>
 </form>
-<button type="button" id="js-main">Main Menu</button>`
+
+<footer></footer>`
 };
 
 function renderCountrySelector() {
@@ -181,13 +231,14 @@ function generateCountryData() {
   let countryArr = store.data.filter(country => country.CountryCode === countryCode)
   let country = countryArr[0]
   return `
-  <div id=>
+  <div class="container">
     <p> ${country.Country} is ranked number ${country.confirmedRank} in the world for total COVID infection. ${country.Country} has had ${Number(country.TotalConfirmed).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} infections.  However, ${country.Country} is ranked
-    ${country.perMillRank} in infections per million with an infection rate of ${Number(country.casesPerMill).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} per million.  ${country.Country} has a population of ${Number(country.population).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})}, and is 
-    ranked ${country.populationRank} in the world by population.  ${country.Country} has had ${Number(country.TotalDeaths).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} deaths due to COVID. ${country.Country} has a population over 65 of ${Number(country.popOver65).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} million,
-    and a GDP per capita of ${Number(country.gdp).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})}.  World wide GDP per capita is $11,428 for 2019 in current USD.
+    number ${country.perMillRank} in cases per million with a rate of ${Number(country.casesPerMill).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} cases per million.  ${country.Country} has a population of ${Number(country.population/1000000).toLocaleString(undefined,{ minimumFractionDigits: 1, maximumFractionDigits: 1})} million, and is 
+    ranked number ${country.populationRank} in the world by population.  ${country.Country} has had ${Number(country.TotalDeaths).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} deaths due to COVID. ${country.Country} has a population over 65 years of age of ${Number(country.popOver65).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})} million,
+    and a GDP per capita of USD ${Number(country.gdp).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 0})} in 2019 current dollars.  World wide GDP per capita is USD 11,428 for 2019 in current USD.
     </p>
-  </div>`
+  </div>
+  <footer></footer>`
 };
 
 function renderCountryData() {
@@ -195,32 +246,6 @@ function renderCountryData() {
   $('.js-listen-here-2').html(countryData)
 };
 
-//These functions create the "10 high/10 low" from the button on the main menu, the button takes
-//you back to the main menu, How much do I want to do here?
-function handleTenData() {
-  $('.js-listen-here').on('click', '#js-ten', function(){
-    renderTopTenData()
-  });
-};
-//Would this be easier to do as an ordered list?
-function generateTopTenData() {
-  return `<div class="table-wrapper-scroll-y my-custom-scrollbar hidden">
-    <button type="button" id="js-main">Main Menu</button>      
-    <table>
-            <!-- here goes our data! -->
-        </table>
-    </div>`
-};
-
-function renderTopTenData() {
-  const tenData = generateTopTenData();
-  $('.js-listen-here').html(tenData)
-  store.data.sort(function(a, b){
-    return a.confirmedRank-b.confirmedRank
-  });
-  generateTable(store.data, displayCases, 10);
-  generateTableHead(headersCases);
-};
 
 //These functions create the "All Data View" from the button on the main menu, the button takes
 //you back to the main menu
@@ -231,12 +256,15 @@ function handleAllData() {
 };
 
 function generateAllData() {
-  return `<div class="table-wrapper-scroll-y my-custom-scrollbar hidden">
-  <button type="button" id="js-main">Main Menu</button>      
+  return `
+  <h2>All Data Table</h2>
+  <div class="table-wrapper-scroll-y my-custom-scrollbar button hidden">
+  <button type="button" id="js-main">Main Menu</button> 
   <table class="">
             <!-- here goes our data! -->
-        </table>
-    </div>`
+        </table>  
+    </div>
+    <footer></footer>`
 };
 
 function renderAllData() {
@@ -289,8 +317,8 @@ function generateTable(data, array, renNum=data.length) {
 
 //Is this ok?  Is this hard coded?
 let allFields = ["Country", "CountryCode", "Slug", "NewConfirmed", "TotalConfirmed", "NewDeaths", "TotalDeaths", "NewRecovered", "TotalRecovered", "Date", "Premium",	"population",	"popOver65", "gdp",	"casesPerMill",	"confirmedRank", "perMillRank",	"populationRank"];
-let displayTotFields = ["Country", "casesPerMill",	"perMillRank", "TotalConfirmed", "confirmedRank", "population", "populationRank", "popOver65", "gdp"];
-let headersTotFields = ["Country", "Cases per million",	"per million Rank", "Cases", "Cases Rank", "Population", "Population Rank", "Population over 65", "GDP per Capita"];
+let displayTotFields = ["Country", "casesPerMill",	"perMillRank", "TotalConfirmed", "confirmedRank", "population", "populationRank"];
+let headersTotFields = ["Country", "Cases per million",	"per million Rank", "Cases", "Cases Rank", "Population", "Population Rank"];
 let displayCases = ["Country", "confirmedRank", "TotalConfirmed", "populationRank", "population", "perMillRank", "casesPerMill"]
 let headersCases = ["Country", "Cases Rank", "Cases", "populationRank", "population", "per million Rank", "Cases per million"] 
 
@@ -302,7 +330,7 @@ function render() {
   handleTenData();
   handleCountrySelector();
   handleCountryData(); 
-}
+};
   
 $(render);
 

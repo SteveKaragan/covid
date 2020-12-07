@@ -3,42 +3,53 @@
   }
   
   body {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Source Sans Pro",Helvetica,Arial,sans-serif;
     display: block;
-  
+    margin: 0;
+  }
+
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+  }
+
+  header{
+    background-color: #660708;
+    color: #F5F3F4;
+    padding: 2px;
+    border: 5px;
   }
 
   h1 {
     text-align: center;
   }
   
-  button, input[type="text"] {
-    padding: 2px;
+  h2 {
+    background-color: #161A1D;
+    color: #F5F3F4;
+    border: 3px;
+    text-align: center;
   }
-  
-  button:hover {
-    cursor: pointer;
+
+  .main-menu {
+    text-align: center;
+    margin: 0, 10%, 0, 10%;
   }
-  
-  ul.no {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  li {
-    padding: 2px;
-  }
-  
-  li, img {
-    max-width: 500px;
-  }
-  
+ 
   .container {
-    max-width: 800px;
+    max-width: 500px;
     margin: 0 auto;
   }
+
+  .form {
+    text-align: center;
+  }
   
+  select {
+    margin: 10px;
+  }
   .error-message {
       color: red;
   }
@@ -57,6 +68,8 @@
   
   th {
     border: 1px solid #999;
+    background-color: #D3D3D3;
+    color: #161A1D;
     padding: 0.5rem;
     text-align: center;
     font-size: small;
@@ -69,32 +82,10 @@
     text-align: right;
   }
 
-  /* div.table {
-    overflow: scroll;
-  }
-
-  thead th {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-  }
-  
-  tbody th {
-    position: -webkit-sticky;
-    position: sticky;
-    left: 0;
-  }  */
-
   thead th:first-child {
     left: 0;
     z-index: 1;
   }
-
-  /* .baseball td:nth-child(1){
-    text-align: left;}
-    
-  .baseball .baseball td:nth-child(3){
-    text-align: right;} */
 
   tbody>tr>:nth-child(1){
       text-align:left;
@@ -107,15 +98,21 @@
   }
 
   .table-wrapper-scroll-y {
-  display: block;
+    display: block;
+  }
+
+  .button {
+    text-align: center;
   }
 
   button {
     position: center;
-    padding: 2px;
-    margin-top: 10px;
+    text-align: center;
+    background-color: #A4161A;
+    color: #161A1D;
+    font-weight: bold;
+    padding: 10px 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
 
-  .main-menu {
-    text-align: center;
-  }
