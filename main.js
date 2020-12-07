@@ -1,34 +1,30 @@
 
 'use strict';
-//BIG QUESTIONS:
-//1. Do I need to collect, merge, and transform my data in another way?
-//2. Error Handling ok?
-//3. Table formatting, data formatting, display, mobile--yikes, dataTables in jQuery?!
-        //Where should I format my data?
-        //How should I store it and where?
-//4. How best to make containers 
 
-//URL's for Data API's
 const urlCOVID = `https://api.covid19api.com/summary`
 const urlPop = `https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json&per_page=5000&date=2019`
 const urlSixtyFive = `https://api.worldbank.org/v2/country/all/indicator/SP.POP.65UP.TO.ZS?format=json&per_page=5000&date=2019`
 const urlGDP = `https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.CD?format=json&per_page=5000&date=2019`
 
-//Promises/Fetch
-//set a variable equal to Promises and console log it with Rick, what is this?  How do you grab [[]]
-
 function begin() {
   Promise.all([fetch(urlCOVID).then(response => response.json()), fetch(urlPop).then(response => response.json()),fetch(urlSixtyFive).then(response => response.json()),
     fetch(urlGDP).then(response => response.json())]).then((values) => grabData(values)).catch((error) => {
       $('#js-error-message').text(`Something went wrong: ${error.message}`)
-   });//what is values?
+   });
   };
 
-//Attempt to get data into global scope
-let data= [];
-let summary = {};
+
+//command F data replace data. with store.data
+const store = {
+  data: [],
+  summary: {},
+}
+
+const data= [];
+const summary = {};
 
 function grabData(values) {
+  console.log(values)
   //is there a better way to define these?  Is this hard coded?
   let covid = values[0].Countries
   let popTotal = values[1][1]; 
@@ -144,9 +140,17 @@ function handleCountrySelector() {
 
 function generateCountrySelector() {
   //This sort does not make them appear in alpha order? Nick C. on thinkchat thinks this is an async issue
-  const options = data.sort(function(a, b){
-    return a.Country-b.Country
-  }).map(country => {
+  const options = data.sort(function (ca, cb) {
+    const a = ca.Country;
+    const b = cb.Country;
+    if (a < b) {
+        return -1;
+    }
+    if (b > a) {
+        return 1;
+    }
+    return 0;
+}).map(country => {
     return `
     <option value="${country.CountryCode}">${country.Country}</option>
     `
@@ -285,7 +289,7 @@ function generateTable(data, array, renNum=data.length) {
 };
 
 
-
+//Is this ok?  Is this hard coded?
 let allFields = ["Country", "CountryCode", "Slug", "NewConfirmed", "TotalConfirmed", "NewDeaths", "TotalDeaths", "NewRecovered", "TotalRecovered", "Date", "Premium",	"population",	"popOver65", "gdp",	"casesPerMill",	"confirmedRank", "perMillRank",	"populationRank"];
 let displayTotFields = ["Country", "casesPerMill",	"perMillRank", "TotalConfirmed", "confirmedRank", "population", "populationRank", "popOver65", "gdp"];
 let headersTotFields = ["Country", "Cases per million",	"per million Rank", "Cases", "Cases Rank", "Population", "Population Rank", "Population over 65", "GDP per Capita"];
