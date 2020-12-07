@@ -20,9 +20,6 @@ const store = {
   summary: {},
 }
 
-const data= [];
-const summary = {};
-
 function grabData(values) {
   console.log(values)
   //is there a better way to define these?  Is this hard coded?
@@ -33,21 +30,21 @@ function grabData(values) {
   //I push the data to data because I could not figure out how to handle a promise object.  This makes data, the same
   //as the data pulled from the COVID API, but I could not just set data = to a function that returned covid.
   //Should I format data here?
-  covid.forEach(country => data.push(country))
+  covid.forEach(country => store.data.push(country))
   //These three functions take the World bank data and place it in each country object by matching country code.
-  data.forEach(country => {
+  store.data.forEach(country => {
       let idx = popTotal.findIndex(country2 => country2.country.id === country.CountryCode)
       country.population = (idx !== -1) ? popTotal[idx].value : null
       });
-  data.forEach(country => {
+  store.data.forEach(country => {
     let idx = popOver65.findIndex(country2 => country2.country.id === country.CountryCode)
     country.popOver65 = (idx !== -1) ? popOver65[idx].value : null
     });
-  data.forEach(country => {
+  store.data.forEach(country => {
     let idx = gdpCapita.findIndex(country2 => country2.country.id === country.CountryCode)
     country.gdp = (idx !== -1) ? gdpCapita[idx].value : null
     });
-    dataTransform(data)
+    dataTransform(store.data)
 }; 
 
 //I added ranking data for each of the world bank data.  I thought it would make sorting/selecting data easier.
@@ -79,13 +76,13 @@ function dataTransform(data) {
 
 //so I am rendering landing page here, because otherwise the summary data does not appear.
 function dataSummarize(data) {
-  summary.infections = Number(data.reduce((ac, cv) => ac + cv.TotalConfirmed, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
-  summary.deaths = Number(data.reduce((ac, cv) => ac + cv.TotalDeaths, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
-  summary.recovered = Number(data.reduce((ac, cv) => ac + cv.TotalRecovered, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
-  summary.population = Number(data.reduce((ac, cv) => ac + cv.population, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
-  summary.popOver65 = Number(data.reduce((ac, cv) => ac + cv.popOver65, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
-  summary.infectPerMill = Number(summary.infections /(summary.population / 1000000)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
-  summary.infectRate = Number(summary.infections / summary.population).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.infections = Number(data.reduce((ac, cv) => ac + cv.TotalConfirmed, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.deaths = Number(data.reduce((ac, cv) => ac + cv.TotalDeaths, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.recovered = Number(data.reduce((ac, cv) => ac + cv.TotalRecovered, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.population = Number(data.reduce((ac, cv) => ac + cv.population, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.popOver65 = Number(data.reduce((ac, cv) => ac + cv.popOver65, 0)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.infectPerMill = Number(store.summary.infections /(store.summary.population / 1000000)).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
+  store.summary.infectRate = Number(store.summary.infections / store.summary.population).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 1})
   renderLandingPage()
 };
 
@@ -100,8 +97,8 @@ function generateLandingPage() {
         differences.
     </p>
 
-    <p>Based on the data from the sources above there have been ${summary.infections} coronavirus cases world-wide. ${summary.deaths}
-    people have died, and ${summary.recovered} people have recovered.</p>
+    <p>Based on the data from the sources above there have been ${store.summary.infections} coronavirus cases world-wide. ${store.summary.deaths}
+    people have died, and ${store.summary.recovered} people have recovered.</p>
 </div>
 </div>`
 };
@@ -129,6 +126,7 @@ function generateMainMenu() {
 function renderMainMenu() {
   const mainMenu = generateMainMenu();
   $('.js-listen-here').html(mainMenu);
+  $('.js-listen-here-2').empty()
 };
 
 //These functions are to show one country selector
@@ -140,7 +138,7 @@ function handleCountrySelector() {
 
 function generateCountrySelector() {
   //This sort does not make them appear in alpha order? Nick C. on thinkchat thinks this is an async issue
-  const options = data.sort(function (ca, cb) {
+  const options = store.data.sort(function (ca, cb) {
     const a = ca.Country;
     const b = cb.Country;
     if (a < b) {
@@ -180,7 +178,7 @@ function handleCountryData() {
 function generateCountryData() {
   let e = document.getElementById("select");
   let countryCode = e.value;
-  let countryArr = data.filter(country => country.CountryCode === countryCode)
+  let countryArr = store.data.filter(country => country.CountryCode === countryCode)
   let country = countryArr[0]
   return `
   <div id=>
@@ -217,10 +215,10 @@ function generateTopTenData() {
 function renderTopTenData() {
   const tenData = generateTopTenData();
   $('.js-listen-here').html(tenData)
-  data.sort(function(a, b){
+  store.data.sort(function(a, b){
     return a.confirmedRank-b.confirmedRank
   });
-  generateTable(data, displayCases, 10);
+  generateTable(store.data, displayCases, 10);
   generateTableHead(headersCases);
 };
 
@@ -244,10 +242,10 @@ function generateAllData() {
 function renderAllData() {
   const allData = generateAllData();
   $('.js-listen-here').html(allData)
-  data.sort(function(a, b){
+  store.data.sort(function(a, b){
     return a.perMillRank-b.perMillRank
   });
-  generateTable(data, displayTotFields);
+  generateTable(store.data, displayTotFields);
   generateTableHead(headersTotFields);
 };
 
