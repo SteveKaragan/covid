@@ -88,7 +88,7 @@ function dataSummarize(data) {
 function generateLandingPage() {
   return `
   <h2>Site Information</h2>
-  <img src="/images/covid.jpeg" alt="COVID Virus">
+  <img src="images/covid.jpeg" alt="COVID Virus">
   <div class="container">
   <p>This site has been created to help the average person get a better, more quantitative perspective of coronavirus cases world-wide
         by country. Coronavirus data from <a href="https://covid19api.com/">Covid19 API</a>, sourced from Johns Hopkins, 
