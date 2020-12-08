@@ -2,147 +2,130 @@
     box-sizing: border-box;
   }
   
-  body {
-    font-family: "Source Sans Pro",Helvetica,Arial,sans-serif;
+body {
+    font-family: Helvetica,Arial,sans-serif;
     display: block;
     margin: 0;
-  }
+}
 
-  img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 40%;
-  }
+header{
+  background-color: #660708;
+  color: #F5F3F4;
+  padding: 2px;
+  border: 5px;
+}
 
-  header{
-    background-color: #660708;
-    color: #F5F3F4;
-    padding: 2px;
-    border: 5px;
-  }
+h1 {
+  text-align: center;
+}
 
-  h1 {
-    text-align: center;
-  }
-  
-  h2 {
-    background-color: #161A1D;
-    color: #F5F3F4;
-    border: 3px;
-    text-align: center;
-    padding: 10px;
-  }
+h2 {
+  background-color: #161A1D;
+  color: #F5F3F4;
+  border: 3px;
+  text-align: center;
+  padding: 10px;
+}
 
-  a {
-    color: #660708;
-    text-decoration: underline;
-  }
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+}
 
-  a:hover {
-    background-color: #161A1D;
-    color: #E5383B;
-  }
+a {
+  color: #660708;
+  text-decoration: underline;
+}
 
-  .main-menu {
-    text-align: center;
-    margin: 0, 10%, 0, 10%;
-  }
- 
-  .container {
-    max-width: 92%;
-    margin: 0 auto;
-  }
+a:hover {
+  background-color: #161A1D;
+  color: #E5383B;
+}
 
-  .form {
-    text-align: center;
-  }
-  
-  select {
-    margin: 10px;
-  }
-  .error-message {
-      color: red;
-  }
-  
-  .hidden {
-    display: none;
-  }
+.main-menu {
+  text-align: center;
+  margin: 0, 10%, 0, 10%;
+}
 
-  table {
-    border-collapse: collapse;
-    width: auto;
-    margin-right: auto;
-    margin-left: auto;
+.container {
+  max-width: 92%;
+  margin: 0 auto;
+}
 
-  }
-  
-  th {
-    border: 1px solid #999;
+.form {
+  text-align: center;
+}
+
+select {
+  margin: 10px;
+}
+.error-message {
+    color: red;
+}
+
+table {
+  border-collapse: collapse;
+  width: auto;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+th {
+  border: 1px solid #999;
+  background-color: #D3D3D3;
+  color: #161A1D;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: small;
+}
+
+td {
+  border: 1px solid #999;
+  padding: 0.5rem;
+  font-size: small;
+  text-align: right;
+}
+
+thead th:first-child {
+  left: 0;
+  z-index: 1;
+}
+
+tbody>tr>:nth-child(1){
+    text-align:left;
+    }
+
+tr:hover {
     background-color: #D3D3D3;
-    color: #161A1D;
-    padding: 0.5rem;
-    text-align: center;
-    font-size: small;
   }
 
-  td {
-    border: 1px solid #999;
-    padding: 0.5rem;
-    font-size: small;
-    text-align: right;
+.button {
+  text-align: center;
+}
+
+button {
+  position: center;
+  text-align: center;
+  background-color: #A4161A;
+  color: #F5F3F4;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+button:hover {
+  background-color: #161A1D;
+  color: #E5383B;
+}
+
+@media all and (min-width: 600px) {
+  .container {
+    max-width: 800px;
   }
+}
 
-  thead th:first-child {
-    left: 0;
-    z-index: 1;
-  }
 
-  tbody>tr>:nth-child(1){
-      text-align:left;
-     }
-  
-  tr:hover {
-      background-color: #D3D3D3;
-    }
-
-  .my-custom-scrollbar {
-    position: relative;
-    height: 400px;
-    overflow: auto;
-  }
-
-  .table-wrapper-scroll-y {
-    display: block;
-  }
-
-  .button {
-    text-align: center;
-  }
-
-  button {
-    position: center;
-    text-align: center;
-    background-color: #A4161A;
-    color: #F5F3F4;
-    font-weight: bold;
-    padding: 10px 20px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-  
-  button:hover {
-    background-color: #161A1D;
-    color: #E5383B;
-  }
-
-  @media all and (min-width: 600px) {
-
-    .container {
-      max-width: 800px;
-    }
-
-  }
-
- 
 
