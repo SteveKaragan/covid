@@ -136,5 +136,13 @@
     color: #E5383B;
   }
 
+  @media all and (min-width: 600px) {
+
+    .container {
+      max-width: 800px;
+    }
+
+  }
+
  
 

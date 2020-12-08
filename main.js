@@ -9,13 +9,18 @@ const urlGDP = `https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.C
 function begin() {
   Promise.all([fetch(urlCOVID).then(response => response.json()), fetch(urlPop).then(response => response.json()),fetch(urlSixtyFive).then(response => response.json()),
     fetch(urlGDP).then(response => response.json())]).then((values) => grabData(values)).catch((error) => {
-      $('#js-error-message').text(`Something went wrong: ${error.message}`)
+      $('#js-error-message').text(`Something went wrong please reload page in a few minutes.`)
    });
   };
 
 const store = {
   data: [],
-  summary: {},
+  summary: {
+    displayTotFields: ["Country", "casesPerMill",	"perMillRank", "TotalConfirmed", "confirmedRank", "population", "populationRank"],
+    headersTotFields: ["Country", "Cases per Million",	"per Million Rank", "Cases", "Cases Rank", "Population", "Population Rank"],
+    displayCases: ["Country", "confirmedRank", "TotalConfirmed", "populationRank", "population", "perMillRank", "casesPerMill"],
+    headersCases: ["Country", "Cases Rank", "Cases", "Population Rank", "Population", "per Million Rank", "Cases per Million"], 
+  },
 };
 
 function grabData(values) {
@@ -149,10 +154,11 @@ function handleTenData() {
   });
 };
 //Would this be easier to do as an ordered list?
+//table-wrapper-scroll-y my-custom-scrollbar 
 function generateTopTenData() {
   return `
   <h2>Top 10 Data</h2>
-  <div class="table-wrapper-scroll-y my-custom-scrollbar container">
+  <div class="container">
          
     <table>
             <!-- here goes our data! -->
@@ -170,8 +176,8 @@ function renderTopTenData() {
   store.data.sort(function(a, b){
     return a.confirmedRank-b.confirmedRank
   });
-  generateTable(store.data, displayCases, 10);
-  generateTableHead(headersCases);
+  generateTable(store.data, store.summary.displayCases, 10);
+  generateTableHead(store.summary.headersCases);
 };
 
 //These functions are to show one country selector
@@ -238,6 +244,7 @@ function generateCountryData() {
     and a GDP per capita of USD ${Number(country.gdp).toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 0})} in 2019 current dollars.  World wide GDP per capita is USD 11,428 for 2019 in current USD.
     </p>
   </div>
+ 
   <footer></footer>`
 };
 
@@ -255,10 +262,11 @@ function handleAllData() {
   });
 };
 
+//"table-wrapper-scroll-y my-custom-scrollbar
 function generateAllData() {
   return `
   <h2>All Data Table</h2>
-  <div class="table-wrapper-scroll-y my-custom-scrollbar button container">
+  <div class="button container">
   <button type="button" id="js-main">Main Menu</button> 
   <table class="">
             <!-- here goes our data! -->
@@ -273,8 +281,8 @@ function renderAllData() {
   store.data.sort(function(a, b){
     return a.perMillRank-b.perMillRank
   });
-  generateTable(store.data, displayTotFields);
-  generateTableHead(headersTotFields);
+  generateTable(store.data, store.summary.displayTotFields);
+  generateTableHead(store.summary.headersTotFields);
 };
 
 function handleBackMainMenu() {
