@@ -34,13 +34,23 @@
     padding: 10px;
   }
 
+  a {
+    color: #660708;
+    text-decoration: underline;
+  }
+
+  a:hover {
+    background-color: #161A1D;
+    color: #E5383B;
+  }
+
   .main-menu {
     text-align: center;
     margin: 0, 10%, 0, 10%;
   }
  
   .container {
-    max-width: 500px;
+    max-width: 92%;
     margin: 0 auto;
   }
 
@@ -91,6 +101,10 @@
   tbody>tr>:nth-child(1){
       text-align:left;
      }
+  
+  tr:hover {
+      background-color: #D3D3D3;
+    }
 
   .my-custom-scrollbar {
     position: relative;
@@ -110,10 +124,17 @@
     position: center;
     text-align: center;
     background-color: #A4161A;
-    color: #161A1D;
+    color: #F5F3F4;
     font-weight: bold;
     padding: 10px 20px;
     margin-top: 5px;
     margin-bottom: 5px;
   }
+  
+  button:hover {
+    background-color: #161A1D;
+    color: #E5383B;
+  }
+
+ 
 

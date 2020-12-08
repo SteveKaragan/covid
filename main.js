@@ -152,7 +152,7 @@ function handleTenData() {
 function generateTopTenData() {
   return `
   <h2>Top 10 Data</h2>
-  <div class="table-wrapper-scroll-y my-custom-scrollbar hidden">
+  <div class="table-wrapper-scroll-y my-custom-scrollbar container">
          
     <table>
             <!-- here goes our data! -->
@@ -258,7 +258,7 @@ function handleAllData() {
 function generateAllData() {
   return `
   <h2>All Data Table</h2>
-  <div class="table-wrapper-scroll-y my-custom-scrollbar button hidden">
+  <div class="table-wrapper-scroll-y my-custom-scrollbar button container">
   <button type="button" id="js-main">Main Menu</button> 
   <table class="">
             <!-- here goes our data! -->
@@ -318,9 +318,9 @@ function generateTable(data, array, renNum=data.length) {
 //Is this ok?  Is this hard coded?
 let allFields = ["Country", "CountryCode", "Slug", "NewConfirmed", "TotalConfirmed", "NewDeaths", "TotalDeaths", "NewRecovered", "TotalRecovered", "Date", "Premium",	"population",	"popOver65", "gdp",	"casesPerMill",	"confirmedRank", "perMillRank",	"populationRank"];
 let displayTotFields = ["Country", "casesPerMill",	"perMillRank", "TotalConfirmed", "confirmedRank", "population", "populationRank"];
-let headersTotFields = ["Country", "Cases per million",	"per million Rank", "Cases", "Cases Rank", "Population", "Population Rank"];
+let headersTotFields = ["Country", "Cases per Million",	"per Million Rank", "Cases", "Cases Rank", "Population", "Population Rank"];
 let displayCases = ["Country", "confirmedRank", "TotalConfirmed", "populationRank", "population", "perMillRank", "casesPerMill"]
-let headersCases = ["Country", "Cases Rank", "Cases", "populationRank", "population", "per million Rank", "Cases per million"] 
+let headersCases = ["Country", "Cases Rank", "Cases", "Population Rank", "Population", "per Million Rank", "Cases per Million"] 
 
 function render() {
   begin();
