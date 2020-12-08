@@ -17,10 +17,10 @@ function begin() {
 const store = {
   data: [],
   summary: {
-    displayTotFields: ["Country", "casesPerMill",	"perMillRank", "TotalConfirmed", "confirmedRank", "population", "populationRank"],
-    headersTotFields: ["Country", "Cases per Million",	"per Million Rank", "Cases", "Cases Rank", "Population", "Population Rank"],
-    displayCases: ["Country", "confirmedRank", "TotalConfirmed", "populationRank", "population", "perMillRank", "casesPerMill"],
-    headersCases: ["Country", "Cases Rank", "Cases", "Population Rank", "Population", "per Million Rank", "Cases per Million"], 
+    displayTotFields: ["Country", "perMillRank", "confirmedRank", "populationRank"],
+    headersTotFields: ["Country", "per Million Rank", "Cases Rank", "Population Rank"],
+    displayCases: ["Country", "confirmedRank", "populationRank", "perMillRank"],
+    headersCases: ["Country", "Cases Rank", "Population Rank", "per Million Rank"], 
   },
 };
 
